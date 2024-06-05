@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fetch API Test</title>
+    <script src="{{ url_for('static', filename='echarts.js') }}"></script>
 </head>
 <body>
     <form onsubmit="draw_graph(event)" method="post">
@@ -11,7 +12,7 @@
         <input type="text" id="graph_instruction">
         <input type="submit" value="グラフ作成実行"></button>
     </form>
-    <div id="graph_div"></div>
+    <div id="graph_div" style="width: 600px; height: 400px;"></div>
 </body>
 
 <script>
@@ -58,6 +59,10 @@ function draw_graph(event){
                 }
                 response.json().then((option)=>{
                     console.log(option)
+                    
+
+
+
                     let myChart = echarts.init(graph_div);
                     myChart.setOption(option);
                 })

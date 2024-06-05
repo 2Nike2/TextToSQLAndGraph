@@ -26,17 +26,17 @@ decide_graph_option_prompt = """\
 列名: {columns}
 
 制約:
-・データの配列が必要なところは「data["列名"]」のように指定して下さい。
+・データの配列が必要なところは「"data_列名"]「"data_列名1,data_列名2"]のように文字列で指定して下さい。(JSONのバリデーションを通す為。)
 
 出力例:
 {{
-  xAxis: {{}},
-  yAxis: {{}},
-  series: [
+  ”xAxis”: {{}},
+  ”yAxis”: {{}},
+  ”series”: [
     {{
-      symbolSize: 20,
-      data: data["target_column1", "target_column2"],
-      type: "scatter"
+      ”symbolSize”: 20,
+      ”data”: "data_col1,data_col2",
+      ”type”: "scatter"
     }}  
   ]
 }}
@@ -99,5 +99,5 @@ def get_graph_option():
 
     print('graph_option', graph_option)
 
-    return {'test': 1}
+    return graph_option
     
