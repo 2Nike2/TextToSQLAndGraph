@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch API Test</title>
+</head>
+<body>
+    <form onsubmit="draw_graph(event)" method="post">
+        <label for="graph_instruction">グラフ作成指示</label>
+        <input type="text" id="graph_instruction">
+        <input type="submit" value="グラフ作成実行"></button>
+    </form>
+    <div id="graph_div"></div>
+</body>
+
+<script>
+function draw_graph(event){
+    event.preventDefault();
+    fetch('/getdata',
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                'instruction': document.getElementById('graph_instruction').value
+            })
+        }
+    ).then((response)=>
+    {
+        console.log('fetch')
+        if(!response.ok){
+            throw new Error(`HTTP Error! Status${response.status}`);
+        }   
+        graph_div = document.getElementById('graph_div');
+        response.json().then((data)=>{
+            // 今度はinstructionとdataのキー項目(列名)を付けて/getgraphoptionにリクエストを送り、
+            // そのレスポンスのoptionを使ってグラフを描画する
+            
+            // dataのkeyの一覧を取得
+            columns = Object.keys(data);
+
+            fetch('/getgraphoption',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        'instruction': document.getElementById('graph_instruction').value,
+                        'columns': columns
+                    })
+                }
+            ).then((response)=>{
+                if(!response.ok){
+                    throw new Error(`HTTP Error! Status${response.status}`);
+                }
+                response.json().then((option)=>{
+                    console.log(option)
+                    let myChart = echarts.init(graph_div);
+                    myChart.setOption(option);
+                })
+            })
+        })
+
+
+
+    })
+
+}
+
+</script>
+</html>

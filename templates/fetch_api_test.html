@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch API Test</title>
+</head>
+<body>
+    <button onclick="get_demand()">Get Demand Data</button>
+    <div id="data_div"></div>
+</body>
+
+<script>
+function get_demand(){
+    console.log('get_demand start');
+    fetch('/jsontest').then((response)=>
+    {
+        console.log('fetch')
+        if(!response.ok){
+            throw new Error(`HTTP Error! Status${response.status}`);
+        }   
+        data_div = document.getElementById('data_div');
+        response.json().then((data)=>{
+            demand_list = data['demand']
+            // 1列からなるテーブルを作成、ヘッダ名は「需要」
+            table = document.createElement('table');
+            table.appendChild(document.createElement('tr')).appendChild(document.createElement('th')).textContent = '需要';
+            // テーブルにデータを追加
+            for(let i = 0; i < demand_list.length; i++){
+                table.appendChild(document.createElement('tr')).appendChild(document.createElement('td')).textContent = demand_list[i];
+            }
+            // テーブルを表示
+            data_div.appendChild(table);
+        })
+
+    })
+    console.log('get_demand end');
+
+}
+
+</script>
+</html>
