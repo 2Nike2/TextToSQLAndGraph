@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body>
+    <input type="radio" id="graphtype_line" name="graphtype" value="line" onchange="draw_graph(event)">
+    <label for="graphtype_line">折れ線グラフ</label>
+    <input type="radio" id="graphtype_bar" name="graphtype" value="bar" onchange="draw_graph(event)">
+    <label for="graphtype_bar">棒グラフ</label>
+    <input type="radio" id="graphtype_column" name="graphtype" value="column" onchange="draw_graph(event)">
+    <label for="graphtype_column">縦棒グラフ</label>
+    <input type="radio" id="graphtype_pie" name="graphtype" value="pie" onchange="draw_graph(event)">
+    <label for="graphtype_pie">円グラフ</label>
+    <input type="radio" id="graphtype_scatter" name="graphtype" value="scatter" onchange="draw_graph(event)">
+    <label for="graphtype_scatter">散布図</label>
+
+    <div id="graph_div" style="width:800px; height:600px;"></div>
+
+    <script type="text/javascript">
+
+        google.charts.load('current', {'packages':['corechart']});
+        
+        function draw_graph(event){
+            let graphtype = document.querySelector('input[name="graphtype"]:checked').value;
+            let graph_div = document.getElementById("graph_div");
+            
+            let data;
+            let options;
+            let chart;
+            switch(graphtype){
+                case 'line':
+
+                    data = google.visualization.arrayToDataTable([
+                        ['Years', 'Sales', 'Expenses'],
+                        ['2004', 1000, 400],
+                        ['2005', 1170, 460],
+                        ['2006', 660, 1120],
+                        ['2007', 1030, 540]
+                    ]);
+
+                    options = {
+                        title: 'Company Performance',
+                        curveType:'function',
+                        legend: {position: 'bottom'}
+                    };
+
+                    chart = new google.visualization.LineChart(graph_div);
+
+                    break;
+
+                case 'bar':
+
+                    data = google.visualization.arrayToDataTable([
+                        ["Element", "Density"],
+                        ["Copper", 8.94],
+                        ["Silver", 10.49],
+                        ["Gold", 19.30],
+                        ["Platinum", 21.45]
+                    ]);
+
+                    options = {
+                        title: 'Density of Precious Metals, in g/cm^3',
+                        legend: {position: 'none'}
+                    };
+                    
+                    chart = new google.visualization.BarChart(graph_div);
+
+                    break;
+
+                case "column":
+
+                    data = google.visualization.arrayToDataTable([
+                        ["Element", "Density"],
+                        ["Copper", 8.94],
+                        ["Silver", 10.49],
+                        ["Gold", 19.30],
+                        ["Platinum", 21.45]
+                    ]);
+
+                    options = {
+                        title: 'Density of Precious Metals, in g/cm^3',
+                        legend: {position: 'none'}
+                    };
+
+                    chart = new google.visualization.ColumnChart(graph_div);
+
+                    break;
+
+                case "pie":
+
+                    data = google.visualization.arrayToDataTable([
+                        ['Fruits', 'Share'],
+                        ['Apple', 45],
+                        ['peach', 30],
+                        ['Orange', 100],
+                        ['Banana', 10]
+                    ])
+
+                    options = { 
+                        title: 'Fruits',
+                        legend: {position: 'right'}
+                    }
+
+                    chart = new google.visualization.PieChart(graph_div)
+
+                    break;
+
+                case "scatter":
+                    
+                    data = google.visualization.arrayToDataTable([
+                        ['Height', 'Weight'],
+                        [168, 62],
+                        [150, 40],
+                        [180, 97],
+                        [160, 102],
+                        [120, 23]
+                    ])
+
+                    options = {
+                        title: "Relation of height and weight",
+                        legend: {position: 'top'}
+                    }
+
+                    chart = new google.visualization.ScatterChart(graph_div)
+
+                    break;
+
+            }
+
+            chart.draw(data, options);
+
+        }
+    </script>
+</body>
+</html>
