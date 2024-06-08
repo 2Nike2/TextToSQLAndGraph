@@ -16,6 +16,62 @@
 </body>
 
 <script>
+
+// 散布図の場合のみ想定
+function replaceSeries(series, data){
+
+    replaced_series = []
+    for(let i = 0; i < series.length; i++){
+        let series_data = series[i];
+        let temp_series = {};
+        for(let key in series_data){
+            if(series_data.hasOwnProperty(key)){
+                if(key === 'data'){
+                    let columns_string = series_data[key]
+                    let columns = columns_string.split(',');
+                    columns = columns.map((column)=>{
+                        return column.replace('data_', '');
+                    });
+                    console.log('columns', columns)
+                    let temp_data = [];
+                    console.log('data[columns[0]]', data[columns[0]])
+                    for(let j = 0; j < data[columns[0]].length; j++){
+                        let temp_row = []
+                        for(let k = 0; k < columns.length; k++){
+                            temp_row.push(data[columns[k]][j])
+                        }
+                        temp_data.push(temp_row);
+                    }
+                    temp_series[key] = temp_data;
+                }else{
+                    temp_series[key] = series_data[key];
+                }
+            }
+        replaced_series.push(temp_series);
+        }
+    }
+    
+    return replaced_series;
+}
+
+// 散布図の場合のみ想定
+function replaceDataOfOption(tempOption, data) {
+    let resultOption = {};
+
+    for (let key in tempOption) {
+        if (tempOption.hasOwnProperty(key)) {
+            if (key === "series") {
+                resultOption[key] = replaceSeries(tempOption[key], data);
+            } else {
+                resultOption[key] = tempOption[key];
+            }
+        }
+    }
+
+    return resultOption;
+}
+
+
 function draw_graph(event){
     event.preventDefault();
     fetch('/getdata',
@@ -30,16 +86,14 @@ function draw_graph(event){
         }
     ).then((response)=>
     {
-        console.log('fetch')
         if(!response.ok){
             throw new Error(`HTTP Error! Status${response.status}`);
         }   
         graph_div = document.getElementById('graph_div');
         response.json().then((data)=>{
+            console.log('data', data);
             // 今度はinstructionとdataのキー項目(列名)を付けて/getgraphoptionにリクエストを送り、
             // そのレスポンスのoptionを使ってグラフを描画する
-            
-            // dataのkeyの一覧を取得
             columns = Object.keys(data);
 
             fetch('/getgraphoption',
@@ -58,21 +112,24 @@ function draw_graph(event){
                     throw new Error(`HTTP Error! Status${response.status}`);
                 }
                 response.json().then((option)=>{
-                    console.log(option)
+                    console.log('before', option)
                     
+                    // optionの走査し直して、特定のkeyの値は加工し、それ以外はそのまま使う。
+                    // 連想配列がある場合は再帰的に処理する。
+                    function dataprocess(data) {
+                        // データ処理ロジックをここに実装
+                        return data; // 例として、そのままデータを返す
+                    }
 
-
+                    option_final = replaceDataOfOption(option, data);
+                    console.log('after', option_final)
 
                     let myChart = echarts.init(graph_div);
-                    myChart.setOption(option);
+                    myChart.setOption(option_final);
                 })
             })
         })
-
-
-
     })
-
 }
 
 </script>

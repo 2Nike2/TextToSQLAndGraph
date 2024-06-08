@@ -87,7 +87,8 @@ def get_data():
 
     df = pd.DataFrame(dataset.data, columns=dataset.feature_names)
 
-    return df.to_json()
+    # return df.to_json()
+    return df.to_dict(orient="list")
    
 @app.route('/getgraphoption', methods=['POST'])
 def get_graph_option():
