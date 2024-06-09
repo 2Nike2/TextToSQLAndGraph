@@ -1,4 +1,4 @@
-from flask import Flask, render_template,request
+from flask import Flask, render_template, request, redirect, url_for
 from flask_cors import CORS
 from sklearn.datasets import load_iris, load_wine
 import pandas as pd
@@ -65,7 +65,8 @@ CORS(app, resources={"/jsontest": {"origins": " http://127.0.0.1:5500"}})
 
 @app.route('/')
 def root_page():
-    return 'This is the root page.'
+    return redirect(url_for('graph_page'))
+    # return 'This is the root page.'
 
 @app.route('/jsontest')
 def jsontest():
