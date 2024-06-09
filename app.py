@@ -5,19 +5,7 @@ import pandas as pd
 from langchain_openai.chat_models import ChatOpenAI
 from langchain_core.output_parsers import JsonOutputParser
 from langchain.prompts import PromptTemplate
-
-decide_dataset_prompt = """\
-次の指示についてどのデータセットを取得すべきかを決定して下さい。
-
-指示: {instruction}
-
-選択肢：
-"iris", "wine"
-
-出力例:
-{{"dataset": "target_dataset"}}
-"""
-decide_dataset_template = PromptTemplate.from_template(decide_dataset_prompt)
+from models.datasets import get_sql_data
 
 decide_graphtype_and_columns_prompt = """\
 次の指示と列名一覧から使用すべきグラフ種類と表示する列を下記から選び、JSON形式で出力して下さい。
@@ -54,8 +42,6 @@ decide_graph_option_template = PromptTemplate.from_template(decide_graph_option_
 
 llm = ChatOpenAI()
 
-decide_dataset_chain = decide_dataset_template | llm | JsonOutputParser()
-
 decide_graphtype_and_columns_chain = decide_graphtype_and_columns_template | llm | JsonOutputParser()
 
 decide_graph_option_chain = decide_graph_option_template | llm | JsonOutputParser()
@@ -90,16 +76,9 @@ def get_data():
     instruction = data['instruction']
     print(instruction)
 
-    dataset_name = decide_dataset_chain.invoke({'instruction': instruction})['dataset']
-    
-    if dataset_name == 'iris':
-        dataset = load_iris()
-    elif dataset_name == 'wine':
-        dataset = load_wine()
+    df = get_sql_data(instruction)
 
-    df = pd.DataFrame(dataset.data, columns=dataset.feature_names)
-
-    return df.to_dict(orient="records")
+    return df
 
 @app.route('/getgraphtypeandcolumns', methods=['POST'])
 def get_graphtype_and_columns():

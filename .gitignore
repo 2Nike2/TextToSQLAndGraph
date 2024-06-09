@@ -161,5 +161,12 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
+models/metastore_db/*
+models/spark-warehouse/*
+
+
 **/.DS_Store
 static/echarts.js
+
+test.ipynb
+templates/test.html
