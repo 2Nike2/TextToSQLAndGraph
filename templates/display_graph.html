@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graph Layout</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <!-- グラフ描画領域 -->
+                <div id="graph_div" class="border p-3" style="width: 600px; height: 600px;">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <!-- グラフ作成指示テキストinput項目 -->
+                <div id="graph-inputs" class="border p-3 mb-3">
+                    <form onsubmit="draw_graph(event)" method="post">
+                        <label for="graph_instruction">グラフ作成指示</label>
+                        <textarea id="graph_instruction" rows="10" cols="50"></textarea>
+                        <!-- <input type="text" id="graph_instruction"> -->
+                        <input type="submit" value="グラフ作成実行"></button>
+                    </form>
+                </div>
+
+                <!-- グラフオプション表示テキスト領域 -->
+                <div class="border p-3 mb-3">
+                    <label for="graph_options_textarea" class="form-label">グラフオプション</label>
+                    <textarea class="form-control" id="graph_options_textarea" rows="10"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+
+    <script>
+
+        // Google Charts APIのロード
+        google.charts.load('current', {'packages':['corechart']});
+                
+        function getChart(graphtype, graph_div){
+            switch(graphtype){
+                case 'LineChart':
+                    return new google.visualization.LineChart(graph_div);
+                case 'ColumnChart':
+                    return new google.visualization.ColumnChart(graph_div);
+                case 'BarChart':
+                    return new google.visualization.BarChart(graph_div);
+                case 'PieChart':
+                    return new google.visualization.PieChart(graph_div);
+                case 'ScatterChart':
+                    return new google.visualization.ScatterChart(graph_div);
+                case 'AreaChart':
+                    return new google.visualization.AreaChart(graph_div);
+                case 'SteppedAreaChart':
+                    return new google.visualization.SteppedAreaChart(graph_div);
+                case 'BubbleChart':
+                    return new google.visualization.BubbleChart(graph_div);
+                case 'CandlestickChart':
+                    return new google.visualization.CandlestickChart(graph_div);
+                case 'ComboChart':
+                    return new google.visualization.ComboChart(graph_div);
+                case 'Histogram':
+                    return new google.visualization.Histogram(graph_div);
+                case 'Line':
+                    return new google.visualization.Line(graph_div);
+                case 'OrgChart':
+                    return new google.visualization.OrgChart(graph_div);
+                case 'Sankey':
+                    return new google.visualization.Sankey(graph_div);
+                case 'Table':
+                    return new google.visualization.Table(graph_div);
+                case 'TreeMap':
+                    return new google.visualization.TreeMap(graph_div);
+                case 'Gauge':
+                    return new google.visualization.Gauge(graph_div);
+                case 'GeoChart':
+                    return new google.visualization.GeoChart(graph_div);
+                case 'Timeline':
+                    return new google.visualization.Timeline(graph_div);
+                case 'WordTree':
+                    return new google.visualization.WordTree(graph_div);
+                case 'AnnotationChart':
+                    return new google.visualization.AnnotationChart(graph_div);
+                case 'Calendar':
+                    return new google.visualization.Calendar(graph_div);
+                case 'Candlestick':
+                    return new google.visualization.Candlestick(graph_div);
+                case 'Gantt':
+                    return new google.visualization.Gantt(graph_div);
+                case 'Intervals':
+                    return new google.visualization.Intervals(graph_div);
+                case 'LineChart':
+                    return new google.visualization.LineChart(graph_div);
+                case 'MotionChart':
+                    return new google.visualization.MotionChart(graph_div);
+                case 'OrgChart':
+                    return new google.visualization.OrgChart(graph_div);
+                case 'Sankey':
+                    return new google.visualization.Sankey(graph_div);
+                case 'ScatterChart':
+                    return new google.visualization.ScatterChart(graph_div);
+                case 'SteppedAreaChart':
+                    return new google.visualization.SteppedAreaChart(graph_div);
+                case 'Table':
+                    return new google.visualization.Table(graph_div);
+                case 'TreeMap':
+                    return new google.visualization.TreeMap(graph_div);
+                case 'BubbleChart':
+                    return new google.visualization.BubbleChart(graph_div);
+                case 'CandlestickChart':
+                    return new google.visualization.CandlestickChart(graph_div);
+                case 'ColumnChart':
+                    return new google.visualization.ColumnChart(graph_div);
+            }
+        }
+
+        function draw_graph(event){
+            event.preventDefault();
+            fetch('/getdata',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        'instruction': document.getElementById('graph_instruction').value
+                    })
+                }
+            ).then((response)=>
+            {
+                if(!response.ok){
+                    throw new Error(`HTTP Error! Status${response.status}`);
+                }   
+                graph_div = document.getElementById('graph_div');
+                response.json().then((data)=>{
+                    console.log('data', data);
+                    columns = Object.keys(data[0]);
+                    console.log('columns', columns);
+
+                    // グラフ種類と使用する列名の指定
+                    fetch('getgraphtypeandcolumns',
+                        {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                'instruction': document.getElementById('graph_instruction').value,
+                                'columns': columns
+                            })
+                        }
+                    ).then((response)=>{
+                        if(!response.ok){
+                            throw new Error(`HTTP Error! Status${response.status}`);
+                        }
+                        response.json().then((graphtype_and_columns)=>{
+                            console.log('graphtype_and_columns', graphtype_and_columns);
+                            graphtype = graphtype_and_columns['graphtype'];
+                            columns = graphtype_and_columns['columns'];
+                            
+                            // グラフデータの作成
+                            let graph_data = [];
+
+                            // 1行目は列名
+                            graph_data.push(columns);
+
+                            // 2行目以降はデータ
+                            data.forEach((row)=>{
+                                let row_data = [];
+                                columns.forEach((column)=>{
+                                    row_data.push(row[column]);
+                                });
+                                graph_data.push(row_data);
+                            });
+
+                            graph_data = google.visualization.arrayToDataTable(graph_data);
+                            console.log('graph_data', graph_data);
+
+
+                            // グラフオプションの取得
+                            fetch('/getgraphoption',
+                                {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        'instruction': document.getElementById('graph_instruction').value,
+                                        'columns': columns,
+                                        'graphtype': graphtype
+                                    })
+                                }
+                            ).then((response)=>{
+                                if(!response.ok){
+                                    throw new Error(`HTTP Error! Status${response.status}`);
+                                }
+                                response.json().then((option)=>{
+                                    
+                                    // グラフオプションの設定
+                                    let graph_options = option;
+                                    console.log('graph_options', graph_options);
+
+                                    let chart = getChart(graphtype, graph_div);
+                                    chart.draw(graph_data, graph_options);
+
+                                })
+                            })
+                        })
+                    })
+                })
+            })
+        }
+
+    </script>
+
+</body>
+</html>
