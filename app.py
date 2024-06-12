@@ -13,6 +13,11 @@ decide_graphtype_and_columns_prompt = """\
 グラフ種類:
 "ScatterChart", "BarChart", "PieChart", "LineChart"
 
+制約:
+・ここで取得するグラフ種類と列はGoogle Chartsでのグラフ描画に使うことを考慮して下さい。
+・グラフの種類によりますが、columnsについてはラベルとなる列を一番最初に記載して下さい。
+　例えば集計結果を表示するような場合は、項目種類の列が先で、集計値の列が後になります。
+
 出力例：
 {{"graphtype": "ScatterChart", "columns": ["target_column1", "target_column2"]}}
 

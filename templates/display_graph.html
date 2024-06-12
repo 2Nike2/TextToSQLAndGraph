@@ -121,6 +121,7 @@
 
         function draw_graph(event){
             event.preventDefault();
+            // データの取得
             fetch('/getdata',
                 {
                     method: 'POST',
