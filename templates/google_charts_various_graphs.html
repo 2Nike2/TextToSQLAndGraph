@@ -92,13 +92,21 @@
 
                 case "pie":
 
+                    // data = google.visualization.arrayToDataTable([
+                    //     ['Fruits', 'Number'],
+                    //     ['Apple', 45],
+                    //     ['peach', 30],
+                    //     ['Orange', 100],
+                    //     ['Banana', 10]
+                    // ])
                     data = google.visualization.arrayToDataTable([
-                        ['Fruits', 'Share'],
-                        ['Apple', 45],
-                        ['peach', 30],
-                        ['Orange', 100],
-                        ['Banana', 10]
+                        ['Fruits', 'Number'],
+                        ['100', 45],
+                        ['234', 30],
+                        ['6342', 100],
+                        ['1', 10]
                     ])
+                    console.log(data)
 
                     options = { 
                         title: 'Fruits',
