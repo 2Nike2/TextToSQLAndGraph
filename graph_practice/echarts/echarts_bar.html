@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECharts 棒グラフ練習</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+</head>
+<body>
+    <div id="graph_choice">
+        <input type="radio" name="sample" value="1" onclick="drawGrapgh()" />
+        <label for="sample1">基本</label>
+        <input type="radio" name="sample" value="2" onclick="drawGrapgh()" />
+        <label for="sample2">横棒</label>
+        <input type="radio" name="sample" value="3" onclick="drawGrapgh()" />
+        <label for="sample3">複数種類(並列)</label>
+    </div>
+
+    <div id="chart_area" style="width: 800px; height: 400px;"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js" integrity="sha512-k37wQcV4v2h6jgYf5IUz1MoSKPpDs630XGSmCaCCOXxy2awgAWKHGZWr9nMyGgk3IOxA1NxdkN8r1JHgkUtMoQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script>
+        function drawGrapgh(){
+            // ラジオボックスの値を取得
+            let radio = document.getElementsByName("sample");
+            let radio_value;
+            for (let i = 0; i < radio.length; i++) {
+                if (radio[i].checked) {
+                    radio_value = radio[i].value;
+                    break;
+                }
+            }
+
+            let chart =  echarts.init(document.getElementById('chart_area'));
+
+            let option;
+            switch(radio_value){
+                case "1":
+                    
+                    option = {
+                        title: {
+                            text: 'Simple Bar Chart'
+                        },
+                        legend: {
+                            data:['sales']
+                        },
+                        xAxis: {
+                            data: ['Banana', 'Peach', 'Apple', 'Orange', 'Grape', 'Melon']
+                        },
+                        yAxis: {},
+                        series: [
+                            {
+                                name: 'sales',
+                                type: 'bar',
+                                data: [100, 340, 500, 400, 200, 40]
+                            }
+                        ]
+                    };
+
+                    break;
+                case "2":
+                    
+                    option = {
+                        title: {
+                            text: 'Bar Chart Horizontal'
+                        },
+                        legend: {
+                            data: ['price']
+                        },
+                        yAxis:{
+                            data: ['Pencil', 'Eraser', 'Ruler', 'Notebook', 'Glue']
+                        },
+                        xAxis: {
+                            type: 'value'
+                        },
+                        series: [
+                            {
+                                name: 'price',
+                                type: 'bar',
+                                data: [10, 25, 100, 350, 50]
+                            }
+                        ]
+                    };
+
+                    break;
+
+                case "3":
+                    option = {
+                        title: {
+                            text: 'Multiple Bar Chart(Parallel)',
+                            position: 'bottom'
+                        },
+                        legend: {
+                            data: ['Own', 'Other'],
+                        },
+                        xAxis: {
+                            data: [2011, 2012, 2013, 2014]
+                        },
+                        yAxis:{
+                            type: 'value'
+                        },
+                        series: [
+                            {
+                                name: 'Own',
+                                type: 'bar',
+                                data: [100, 240, 220, 250]
+                            },
+                            {
+                                name: 'Other',
+                                type: 'bar',
+                                data: [300, 250, 260, 90]
+                            }
+                        ]
+                    }
+            }
+
+            chart.setOption(option);
+
+        }       
+
+    </script>
+
+</body>
+</html>
