@@ -8,14 +8,18 @@
 </head>
 <body>
     <div id="graph_choice">
-        <input type="radio" name="sample" value="1" onclick="drawGrapgh()" />
+        <input type="radio" id="sample1" name="sample" value="1" onclick="drawGrapgh()" />
         <label for="sample1">基本</label>
-        <input type="radio" name="sample" value="2" onclick="drawGrapgh()" />
+        <input type="radio" id="sample2" name="sample" value="2" onclick="drawGrapgh()" />
         <label for="sample2">横棒</label>
-        <input type="radio" name="sample" value="3" onclick="drawGrapgh()" />
+        <input type="radio" id="sample3" name="sample" value="3" onclick="drawGrapgh()" />
         <label for="sample3">複数種類(並列)</label>
-        <input type="radio" name="sample" value="4" onclick="drawGrapgh()" />
+        <input type="radio" id="sample4" name="sample" value="4" onclick="drawGrapgh()" />
         <label for="sample4">複数種類(積み上げ)</label>
+        <input type="radio" id="sample5" name="sample" value="5" onclick="drawGrapgh()" />
+        <label for="sample5">ウォーターフォール</label>
+        <input type="radio" id="sample6" name="sample" value="6" onclick="drawGrapgh()" />
+        <label for="sample6">ポジティブ/ネガティブ</label>
     </div>
 
     <div id="chart_area" style="width: 1000px; height: 400px;"></div>
@@ -171,6 +175,60 @@
                             }
                         ]
                     }
+                    break;
+
+                case "5":
+                    // 透明のバーで色のあるバーを浮かせる形で実装、
+                    // 積み上げグラフの応用として描画している。
+                    option = {
+                        title: {
+                            text: 'Bar Waterfall'
+                        },
+                        xAxis: {
+                            type: 'category',
+                            data: ['All', 'PartA', 'PartB', 'PartC']
+                        },
+                        yAxis: {
+                            type: 'value'
+                        },
+                        series: {
+
+                        }
+                    }
+                case "6":
+                    option = {
+                        title: {
+                            text: 'Positive/Negative Bar Chart'
+                        },
+                        xAxis: {
+                            type: 'value'
+                        },
+                        yAxis: {
+                            type: "category",
+                            data: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+                        },
+                        series: [
+                            {
+                                name: 'Efficiency',
+                                type: 'bar',
+                                label: {
+                                    show: true,
+                                    formatter: '{b}'
+                                },
+                                data:[
+                                    4.5,
+                                    -3.1,
+                                    0,
+                                    -0.2,
+                                    5.9,
+                                    -7.6,
+                                    0.7,
+                                    5.4
+                                ]
+                            }
+                        ]
+                    }
+
             }
 
             chart.setOption(option);
