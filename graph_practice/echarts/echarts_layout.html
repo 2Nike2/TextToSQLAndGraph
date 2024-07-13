@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EChartsレイアウト</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js" integrity="sha512-k37wQcV4v2h6jgYf5IUz1MoSKPpDs630XGSmCaCCOXxy2awgAWKHGZWr9nMyGgk3IOxA1NxdkN8r1JHgkUtMoQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body>
+    <div id="chart"></div>
+    <button onclick="resize();">resize</button>
+</body>
+<style>
+#chart {
+    width: 900px;
+    height: 600px;
+    background-color: aliceblue;
+}
+</style>
+<script>
+
+    // const chart = echarts.init(document.getElementById('chart'));
+    const chart = echarts.init(document.getElementById('chart'), null,{width: 400, height: 600});
+    const option = {
+        dataset: {
+            source: [
+                ['Title', 'Sales'],
+                ['The Bible', 400],
+                ['The Quran', 800],
+                ['The Torah', 60],
+                ['The Tripitaka', 40],
+                ['The Vedas', 20]
+            ]
+        },
+        yAxis: {type: 'category'},
+        xAxis: {type: 'value'},
+        series: [
+            {
+                type: 'bar',
+                encode: {
+                    x: 'Sales',
+                    y: 'Title'
+                },
+            }
+        ]
+    }
+
+    chart.setOption(option);
+
+    function resize(){
+        chart.resize({width:900, height:600});
+    }
+
+</script>
+</html>
